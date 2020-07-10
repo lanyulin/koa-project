@@ -64,9 +64,11 @@ allowedMethods的作用：
 
 
 # 部署
-[阿里云文档](https://help.aliyun.com/document_detail/50775.html)
 
 服务器 + git + secureCRT/iTerm2 + PM2
+
+#### 1. [阿里云文档](https://help.aliyun.com/document_detail/50775.html)
+
 
 新服务器可先更新操作系统
 ```
@@ -74,10 +76,39 @@ sudo yum -y update（yum是centOS的命令）
 ````
 使用yum安装的node版本过低,不建议使用此方法安装。
 
-按照文档，安装完成后，安装pm2
+#### 2. pm2
 ```
 npm install pm2 -g 全局安装
 ```
+
+#### 3. git
+
+创建git仓库，本地关联远程 git remote add origin [url]
+
+本地提交后，push: git push --set-upstream origin master
+
+#### 4. ssh配置
+- 命令: ssh-keygen 生成ssh公钥
+- 回车回车回车
+- cat /root/.ssh/...(ssh公钥保存的地址)
+- 复制内容，到github的settings(https://github.com/settings/keys)中，添加密钥（不用填title)
+- 把项目拉到服务器上 git clone git@github.com:lanyulin/koa-project.git
+- 进入项目，执行npm install
+
+#### 直接运行
+- npm run start
+- 例如3000端口，需在阿里云安全组，添加一个入方向，放行3000端口
+- 查看是否在监听项目端口: netstat -tpln（杀死进程 kill [pid]）
+
+#### pm2 运行
+- 生成配置文件ecosystem.config.js
+  pm2 ecosystem
+
+### 遇到的问题
+- 每次启动终端都要设置nvm use 
+  执行 nvm alias default stable，重启终端
+
+
 
 一些命令：
 - yum list installed 列出已安装的软件包
@@ -95,4 +126,4 @@ npm install pm2 -g 全局安装
 
 - source 执行脚本命令
 
-创建git仓库，关联本地 git remote add origin [url]
+- hostnamectl 查看临时和固定的主机名

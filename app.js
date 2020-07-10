@@ -1,1 +1,1 @@
-import './src/my-middleware'
+require('./src/my-middleware')
