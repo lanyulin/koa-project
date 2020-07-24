@@ -127,3 +127,113 @@ npm install pm2 -g 全局安装
 - source 执行脚本命令
 
 - hostnamectl 查看临时和固定的主机名
+
+
+
+# docker
+[docker的安装](https://www.runoob.com/docker/centos-docker-install.html)
+### 有老版本，可先卸载
+查看版本 
+``` 
+rpm -qa | grep docker 
+```
+卸载   
+``` 
+yum remove docker \
+                  docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-engine
+```
+
+### 安装 Docker Engine-Community
+设置安装仓库
+``` 
+yum install -y yum-utils \
+        device-mapper-persistent-data \
+        lvm2
+   
+``` 
+设置镜像
+``` 
+yum-config-manager \
+    --add-repo \
+    http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+```
+安装docker Engine-Community
+``` 
+yum install docker-ce docker-ce-cli containerd.io
+```
+查看是否安装成功
+```
+docker -v
+```
+    
+### 安装docker-compose
+从 Github 上下载它的二进制包来使用
+``` 
+curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+```
+将可执行权限应用于二进制文件
+``` 
+chmod +x /usr/local/bin/docker-compose
+```
+安装成功：
+``` 
+docker-compose -v
+```
+启动 Docker
+```
+systemctl start docker
+```
+（重启命令 service docker restart）
+通过运行 hello-world 映像来验证是否正确安装了 Docker Engine-Community
+```
+docker run hello-world
+```
+
+# mongoDB
+[文档地址：搜索mongo](https://hub.docker.com/)
+### 通过docker下载mongo
+```
+docker pull mongo:4
+```
+如果上面下载失败，可修改镜像地址doamon.json
+```
+{       
+  "registry-mirros": ["https://registry.docker-cn.com"]
+}
+```
+启动mongo
+```
+docker run -d --name some-mongo -p 10050:27017 mongo:4
+-d 后台运行指令
+--name 给服务取名字 
+-p 端口映射 27017是docker容器的端口 ，映射到宿主机的10050端口
+mongo:4用这个镜像启动服务
+```
+查看服务
+```
+docker ps
+```
+宿主机的防火墙需放行10050端口
+- 方案一：关闭防火墙
+查看防火墙状态
+```
+systemctl status firewalld
+```
+若关闭，可不管
+（开启防火墙 systemctl start firewalld）
+- 方案二：将10050添加到放行端口中
+firewall-cmd 该命令需要开启防火墙才能使用
+```
+firewall-cmd --zone=public --add-port=10050/tcp --permanent
+```
+重启防火墙
+```
+firewall-cmd --reload
+```
+查看运行状态 firewall-cmd --state
